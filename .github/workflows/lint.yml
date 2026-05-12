@@ -26,7 +26,7 @@ jobs:
         run: uv run ruff check .
 
       - name: Mypy — check types
-        run: uv run mypy . --ignore-missing-imports --no-strict-optional
+        run: uv run mypy . --ignore-missing-imports --no-strict-optional --explicit-package-bases
 
       - name: List files in the repository
         run: |

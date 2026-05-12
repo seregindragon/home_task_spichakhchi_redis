@@ -33,7 +33,7 @@ jobs:
           ls ${{ github.workspace }}
 
       - name: Show job status
-         run: echo "🍏 This job's status is ${{ job.status }}."
+        run: echo "🍏 This job's status is ${{ job.status }}."
 
       - name: Celebrate completion
         run: echo "🎉 home task is done, thanks for help!!"

@@ -1,15 +1,15 @@
 import os
 
 from dotenv import load_dotenv
-from fastapi import Depends, APIRouter
+from fastapi import Depends, APIRouter, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 from stripe import StripeClient
 
 from db import get_db, get_cart_items
-from models import Customer, Order, OrderItem
-from schemas import OrderItemResponse, OrderResponse
+from models import Customer, Order, OrderItem, Product
+from schemas import OrderItemResponse, OrderResponse, OrderDetailResponse
 from .security import get_current_user
 
 load_dotenv()
@@ -88,3 +88,21 @@ async def get_oders(
 async def check_payment_id(intent_id: str):
     intent = await stripe_client.v1.payment_intents.retrieve_async(intent_id)
     print(intent.status)
+
+
+@router.get("/{order_id}", response_model=OrderDetailResponse)
+async def get_order(
+    order_id: int,
+    customer: Customer = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    stmt = (
+        select(Order)
+        .where(Order.id == order_id, Order.customer_id == customer.id)
+        .options(joinedload(Order.items).joinedload(OrderItem.product))
+    )
+    result = await db.execute(stmt)
+    order = result.unique().scalar_one_or_none()
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return order

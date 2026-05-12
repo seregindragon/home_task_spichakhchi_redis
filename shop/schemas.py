@@ -49,11 +49,27 @@ class OrderItemResponse(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class OrderItemDetailResponse(BaseModel):
+    id: int
+    product_id: int
+    quantity: int
+    product: ProductResponse
+    model_config = {"from_attributes": True}
+
+
 class OrderResponse(BaseModel):
     id: int
     customer_id: int
     stripe_payment_intent_id: str
     items: list[OrderItemResponse]
+    model_config = {"from_attributes": True}
+
+
+class OrderDetailResponse(BaseModel):
+    id: int
+    customer_id: int
+    stripe_payment_intent_id: str
+    items: list[OrderItemDetailResponse]
     model_config = {"from_attributes": True}
 
 

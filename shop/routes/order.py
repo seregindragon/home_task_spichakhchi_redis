@@ -8,7 +8,7 @@ from sqlalchemy.orm import joinedload
 from stripe import StripeClient
 
 from db import get_db, get_cart_items
-from models import Customer, Order, OrderItem, Product
+from models import Customer, Order, OrderItem
 from schemas import OrderItemResponse, OrderResponse, OrderDetailResponse
 from .security import get_current_user
 

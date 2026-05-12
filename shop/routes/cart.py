@@ -1,16 +1,10 @@
-from decimal import Decimal
-
-from fastapi import Depends, HTTPException, APIRouter, status
+from fastapi import Depends, APIRouter
 from pydantic import TypeAdapter
 from redis.asyncio import Redis
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from db import get_db, get_cart_items
-from models import Customer, CartItem, Product
-from schemas import Cart, CartItem as CartItemSchema
+from models import Customer
+from schemas import CartItem as CartItemSchema
 from .security import get_current_user
-from redis_schemas import Cart as RedisCart, CartItem as RedisCartItem
 
 router = APIRouter()
 r = Redis(host="localhost", port=6379, decode_responses=True)

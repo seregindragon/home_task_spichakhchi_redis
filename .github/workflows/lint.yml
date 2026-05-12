@@ -1,0 +1,39 @@
+name: Lint
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest       # GitHub-hosted VM, Ubuntu
+
+    defaults:
+      run:
+        working-directory: shop  # всі команди виконуються в ./shop
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install dependencies
+        run: uv sync --dev        # встановлює основні + dev (ruff, mypy)
+
+      - name: Ruff — check style and errors
+        run: uv run ruff check .
+
+      - name: Mypy — check types
+        run: uv run mypy . --ignore-missing-imports --no-strict-optional
+
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+
+      - name: Show job status
+         run: echo "🍏 This job's status is ${{ job.status }}."
+
+      - name: Celebrate completion
+        run: echo "🎉 home task is done, thanks for help!!"
